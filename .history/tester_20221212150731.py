@@ -195,11 +195,10 @@ def graph_data(trials: int, np_thresh, np_loss, np_draw, np_win, ranks: list[str
     y_ticks = range(0, trials, int(trials/10))
     # x = np.arange(2,20)
     # y = 2*x+5
-    output = "Removed: "
+    output = ""
     for i in range(len(ranks)):
-        output += f"{frequencies[i]} x {ranks[i]}, "
-    # plt.title(f"Trials: {trials}\t{output}")
-    plt.title(f"{output}")
+        output += f"Removed: {frequencies[i]} x {ranks[i]}"
+    plt.title(f"Trials: {trials}\t{output}")
     plt.xticks(x_ticks)
     plt.yticks(y_ticks)
     plt.xlabel("Threshhold")

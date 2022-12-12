@@ -36,7 +36,7 @@ if __name__ == "__main__":
     # Generate datetime string to use as output filename
     dt_str = tester.get_datetime()
 
-    tester.graph_data(trials, np_thresh, np_loss, np_draw, np_win, ranks, frequencies, dt_str)
+    tester.graph_data(trials, np_thresh, np_loss, np_draw, np_win, ranks, freq, dt_str)
     
     tester.dump_json(stats_dict, dt_str)
 

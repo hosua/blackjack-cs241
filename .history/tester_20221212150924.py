@@ -197,7 +197,7 @@ def graph_data(trials: int, np_thresh, np_loss, np_draw, np_win, ranks: list[str
     # y = 2*x+5
     output = "Removed: "
     for i in range(len(ranks)):
-        output += f"{frequencies[i]} x {ranks[i]}, "
+        output += f"{frequencies[i]} x {ranks[i]} "
     # plt.title(f"Trials: {trials}\t{output}")
     plt.title(f"{output}")
     plt.xticks(x_ticks)

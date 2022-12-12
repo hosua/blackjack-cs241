@@ -190,16 +190,15 @@ def get_data_lists(stats_dict: dict):
 
     return np_thresh, np_loss, np_draw, np_win 
 
-def graph_data(trials: int, np_thresh, np_loss, np_draw, np_win, ranks: list[str], frequencies: list[int], dt_str: str):
+def graph_data(trials: int, np_thresh, np_loss, np_draw, np_win, ranks: list[str] frequencies: list[int], dt_str: str):
     x_ticks = range(2, 21)
     y_ticks = range(0, trials, int(trials/10))
     # x = np.arange(2,20)
     # y = 2*x+5
-    output = "Removed: "
+    output = ""
     for i in range(len(ranks)):
-        output += f"{frequencies[i]} x {ranks[i]}, "
-    # plt.title(f"Trials: {trials}\t{output}")
-    plt.title(f"{output}")
+        output += f"{frequencies[i]} x {ranks[i]}"
+    plt.title(f"Trials: {trials}")
     plt.xticks(x_ticks)
     plt.yticks(y_ticks)
     plt.xlabel("Threshhold")
