@@ -123,7 +123,8 @@ def run(trials: int) -> dict:
                 stats_dict[thresh]['draw'] += 1
             elif res == 2:
                 stats_dict[thresh]['win'] += 1
-
+    
+    print(f"{trials} trials were ran with no modifications to the deck")
     return stats_dict
 
 def run_with_modified_deck(trials: int, ranks: list[str], frequencies: list[int]) -> dict:
@@ -144,7 +145,6 @@ def run_with_modified_deck(trials: int, ranks: list[str], frequencies: list[int]
     for thresh in range(thresh_min, thresh_max+1):
         for trial in range(trials):
             res = auto_play(thresh, card_types)
-            print(f"result: {res}")
             if res == 0:
                 stats_dict[thresh]['lose'] += 1
             elif res == 1:
@@ -154,5 +154,11 @@ def run_with_modified_deck(trials: int, ranks: list[str], frequencies: list[int]
             else:
                 print("ERROR: trial didn't result in anything!") 
                 exit()
-
+    print("--------------------------------------------")
+    print(f"{trials} trials were ran with the following modifications to the deck:")
+    for i in range(len(ranks)):
+        rank = ranks[i]
+        freq = frequencies[i]
+        print(f"Removed {freq} x {rank} cards\n")
+    print("--------------------------------------------")
     return stats_dict
