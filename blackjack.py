@@ -95,9 +95,9 @@ def play():
 
 
 if __name__ == "__main__":
-    # play()
-    # initialize the statistics dictionary
-    stats_dict = tester.run(1000)
     
+    # Run n trials
+    n = 1000
+    stats_dict = tester.run(n)
     tester.print_stats_dict(stats_dict)
     
