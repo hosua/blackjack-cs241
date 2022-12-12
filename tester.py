@@ -2,19 +2,27 @@ from card_engine import *
 from card_handler import *
 from matplotlib import pyplot as plt
 import numpy as np
+import json
+from datetime import datetime
+import os
+
+# Where all gathered data will be saved
+SAVE_DIR = 'data'
+
 """
-Trial tester
-Hits when below hit threshhold
+Note: If you are reading this, you should call the run() or run_with_modified_deck() functions, do not call
+auto_play() directly. 
+
+Runs hit_thresh number of trials. If a card_types value is passed, remove those card_types from the deck.
+Hits when below hit threshhold.
+
 Returns values:
 0 - player lost
 1 - draw
 2 - player win
 
-***
 Only plays a single game, we should probably consider setting up different game scenarios as well
 to make game decisions based on the cards remaining in the deck.
-***
-
 """
 ### TODO: learn some numpy later so we can make some nice graphs ###
 # array size = 20-2 = 18
@@ -182,7 +190,7 @@ def get_data_lists(stats_dict: dict):
 
     return np_thresh, np_loss, np_draw, np_win 
 
-def graph_data(trials: int, np_thresh, np_loss, np_draw, np_win):
+def graph_data(trials: int, np_thresh, np_loss, np_draw, np_win, dt_str: str):
     x_ticks = range(2, 21)
     y_ticks = range(0, trials, int(trials/10))
     # x = np.arange(2,20)
@@ -195,5 +203,28 @@ def graph_data(trials: int, np_thresh, np_loss, np_draw, np_win):
     plt.plot(np_thresh, np_draw, label='Draws')
     plt.plot(np_thresh, np_win, label='Win')
     plt.legend(loc="upper right")
+    output_fname = f"{SAVE_DIR}/{dt_str}.png"
+    plt.savefig(output_fname)
+    print(f"Saved graph to {output_fname}")
     plt.show()
+
+""" Used for generating unique file name """
+def get_datetime() -> str:
+    curr_dt = datetime.now()
+    dt_str = curr_dt.strftime("%Y-%m-%d_%H-%M-%S")
+    return dt_str
+
+""" Dump stats_dict into json file """
+def dump_json(stats_dict: dict, dt_str: str):
+
+    if not os.path.exists(SAVE_DIR):
+        os.makedirs(SAVE_DIR)
+
+    output_fname = f"{SAVE_DIR}/{dt_str}.json"
+
+    with open(output_fname, "w") as f:
+        json.dump(stats_dict, f, indent=2)
+    print(f"Dumped data to {output_fname}")
+    
+
 

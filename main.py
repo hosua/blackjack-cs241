@@ -13,7 +13,7 @@ import numpy as np
 
 if __name__ == "__main__":
     # number of trials
-    trials = 1000
+    trials = 100
 
 
     """ run without modified deck """
@@ -33,7 +33,11 @@ if __name__ == "__main__":
 
     np_thresh, np_loss, np_draw, np_win = tester.get_data_lists(stats_dict)
     
-    tester.graph_data(trials, np_thresh, np_loss, np_draw, np_win)
+    # Generate datetime string to use as output filename
+    dt_str = tester.get_datetime()
 
-    print(thresh_lst)
+    tester.graph_data(trials, np_thresh, np_loss, np_draw, np_win, dt_str)
+    
+    tester.dump_json(stats_dict, dt_str)
+
     
