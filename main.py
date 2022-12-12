@@ -9,11 +9,19 @@ from card_engine import *
 from matplotlib import pyplot as plt
 import tester
 import numpy as np
+import sys
 
+""" You can enter the number of trials as a command line argument (default 1000) """
 
 if __name__ == "__main__":
-    # number of trials
-    trials = 100
+    trials: int = 1000
+
+    if len(sys.argv) > 1:
+        try:
+            trials = int(sys.argv[1])
+        except ValueError:
+            print("Error: Argument must be an integer")
+            exit(1)
 
     DATA_FNAME = f"T{trials}"
 

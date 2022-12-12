@@ -248,7 +248,6 @@ def get_next_name(path_prefix: str, ext: str) -> str:
         fname = os.path.basename(root)
         if re.match(prefix_pattern, root) and re.match(ext_pattern, f_ext):
             f_num = int(re.match(prefix_pattern, root).group(1))
-            print(f"FNUM: {f_num}")
             i = f_num+1
             
     os.chdir("..")
