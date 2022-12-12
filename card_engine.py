@@ -53,11 +53,32 @@ class Deck:
         # Add cards to the deck
         for i in range(len(SUITS)):
             for j in range(1, 14):
-                ### REMOVE FACE CARDS ###
+                ### ALL TRIALS WILL REMOVE FACE CARDS ###
                 if j != 11 and j != 12 and j != 13:
                     self.deck.append(Card(SUITS[i], RANKS[j]))
 
         self.shuffle()
+
+    """
+    Remove cards by rank from the deck
+    input dict format =  {
+        {rank: freq}, 
+        {rank: freq},
+           .
+           .
+           .
+    }
+    """
+    def remove_from_deck(self, card_types: dict):
+        
+        for rank in card_types:
+            freq = card_types[rank]
+            for card in self.deck:
+                if card.rank.lower() == rank.lower():
+                    self.deck.remove(card)
+                    freq -= 1
+                if freq == 0:
+                    break
     
     # Shuffle the deck
     def shuffle(self):
@@ -283,28 +304,3 @@ def play():
         else:
             continue
  
-# Main class (test code)
-if __name__ == "__main__":
-    play()
-
-
-'''
-    deck.show_info()
-    hand.add_card(deck.draw_card())
-    hand.add_cards(deck.draw_cards(5))
-    hand.add_card(deck.draw_card())
-    hand.show_info()
-    deck.show_info()
-    print(hand.get_len_hand())
-    print(deck.get_len_deck())
-    deck.shuffle()
-    deck.show_info()
-    print(deck.get_len_deck())
-
- 
-RANKS[11] = str(11)
-RANKS[12] = str(12)
-RANKS[13] = str(13)
-
-print(int(RANKS[12]) + int(RANKS[11]))
-'''

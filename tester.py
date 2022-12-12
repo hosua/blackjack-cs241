@@ -1,5 +1,5 @@
 from card_engine import *
-from handler import *
+from card_handler import *
 import numpy as np
 """
 Trial tester
@@ -30,76 +30,81 @@ def print_stats_dict(d: dict):
             print(f"{v} : {d[key][v]}", end="\t")
         print()
 
-def auto_play(hit_thresh: int) -> int:
+def auto_play(hit_thresh: int, card_types: dict=None) -> int:
     # Creates deck for game
     deck = Deck("Blackjack")
 
     player = Hand()
     dealer = Hand()
 
+    # modify the deck if card_types parameter passed
+    if card_types:
+        deck.remove_from_deck(card_types)
+    
     dealer_start(dealer, deck)
     player_start(player, deck)
-    if total_value(player) == 21:
-        dealer_open(dealer)
-        if total_value(dealer) != 21:
-            print("Blackjack! Player wins!\n")
-            return 2
-        else:
-            print("Tie!\n")
-            return 1
-    # below threshhold, hit
-    if total_value(player) < hit_thresh:
-        p_hit(player, deck)
+    while True:
         if total_value(player) == 21:
             dealer_open(dealer)
-            if total_value(dealer) == 21:
-                print("Tie!\n")
-                return 1
-            else:
+            if total_value(dealer) != 21:
                 print("Blackjack! Player wins!\n")
                 return 2
-        elif total_value(player) > 21:
-            print("Player bust! Player loses!\n")
-            return 0
-    # above threshhold, stand
-    else:
-        if total_value(dealer) < 17:
-            while total_value(dealer) < 17:
-                d_hit(dealer, deck)
-
-            if total_value(dealer) == total_value(player):
+            else:
                 print("Tie!\n")
                 return 1
-            elif total_value(dealer) == 21:
-                print("Player loses!\n")
+        # below threshhold, hit
+        if total_value(player) < hit_thresh:
+            p_hit(player, deck)
+            if total_value(player) == 21:
+                dealer_open(dealer)
+                if total_value(dealer) == 21:
+                    print("Tie!\n")
+                    return 1
+                else:
+                    print("Blackjack! Player wins!\n")
+                    return 2
+            elif total_value(player) > 21:
+                print("Player bust! Player loses!\n")
                 return 0
-            elif total_value(dealer) > 21:
-                print("Dealer bust! Player wins!\n")
-                return 2
-            elif total_value(dealer) > total_value(player):
-                print("Player loses!\n")
-                return 0
-            else:
-                print("Player wins!\n")
-                return 2
+        # above threshhold, stand
         else:
-            dealer_open(dealer)
-            if total_value(dealer) == total_value(player):
-                print("Tie!\n")
-                return 1
-            if total_value(dealer) == 21:
-                print("Player loses!\n")
-                return 0
-            if total_value(dealer) > 21:
-                print("Dealer bust! Player wins!\n")
-                return 2
-            if total_value(dealer) > total_value(player):
-                print("Player loses!\n")
-                return 0
+            if total_value(dealer) < 17:
+                while total_value(dealer) < 17:
+                    d_hit(dealer, deck)
+
+                if total_value(dealer) == total_value(player):
+                    print("Tie!\n")
+                    return 1
+                elif total_value(dealer) == 21:
+                    print("Player loses!\n")
+                    return 0
+                elif total_value(dealer) > 21:
+                    print("Dealer bust! Player wins!\n")
+                    return 2
+                elif total_value(dealer) > total_value(player):
+                    print("Player loses!\n")
+                    return 0
+                else:
+                    print("Player wins!\n")
+                    return 2
             else:
-                print("Player wins!\n")
-                return 2
-  
+                dealer_open(dealer)
+                if total_value(dealer) == total_value(player):
+                    print("Tie!\n")
+                    return 1
+                if total_value(dealer) == 21:
+                    print("Player loses!\n")
+                    return 0
+                if total_value(dealer) > 21:
+                    print("Dealer bust! Player wins!\n")
+                    return 2
+                if total_value(dealer) > total_value(player):
+                    print("Player loses!\n")
+                    return 0
+                else:
+                    print("Player wins!\n")
+                    return 2
+ 
 
 def run(trials: int) -> dict:
     stats_dict: dict
@@ -121,3 +126,33 @@ def run(trials: int) -> dict:
 
     return stats_dict
 
+def run_with_modified_deck(trials: int, ranks: list[str], frequencies: list[int]) -> dict:
+
+    if len(ranks) != len(frequencies):
+        print("ERROR: length of frequences must match length of ranks")
+        exit()     
+
+    card_types = dict(zip(ranks, frequencies))
+
+    stats_dict: dict
+    thresh_min: int
+    thresh_max: int
+    res: int # 0 -> lose, 1 -> draw, 2 -> win
+
+    stats_dict = init_stats_dict()
+    thresh_min, thresh_max = 2, 20
+    for thresh in range(thresh_min, thresh_max+1):
+        for trial in range(trials):
+            res = auto_play(thresh, card_types)
+            print(f"result: {res}")
+            if res == 0:
+                stats_dict[thresh]['lose'] += 1
+            elif res == 1:
+                stats_dict[thresh]['draw'] += 1
+            elif res == 2:
+                stats_dict[thresh]['win'] += 1
+            else:
+                print("ERROR: trial didn't result in anything!") 
+                exit()
+
+    return stats_dict

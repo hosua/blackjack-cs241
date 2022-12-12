@@ -62,7 +62,6 @@ def total_value(hand):
             if duplicate(ranks(hand)):
                 counter = collections.Counter(ranks(hand))
                 if m_aces(counter):
-                    print("here")
                     value = calc_value(hand)
                     value += 10
                     if value > 21:
