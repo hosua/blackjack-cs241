@@ -19,11 +19,13 @@ if __name__ == "__main__":
     """ run without modified deck """
     # stats_dict = tester.run(trials)
 
-    """ run with modified deck, note that all face cards are already removed """
+    """ run with modified deck """
     # ranks = ["Ace", "9", "8"]
     # frequencies = [4, 3, 2]
-    ranks = []
-    frequencies = []
+
+    # remove all face cards
+    ranks = ["jack", "queen", "king"]
+    frequencies = [4, 4, 4]
     
     stats_dict = tester.run_with_modified_deck(trials, ranks, frequencies)
 

@@ -53,9 +53,7 @@ class Deck:
         # Add cards to the deck
         for i in range(len(SUITS)):
             for j in range(1, 14):
-                ### ALL TRIALS WILL REMOVE FACE CARDS ###
-                if j != 11 and j != 12 and j != 13:
-                    self.deck.append(Card(SUITS[i], RANKS[j]))
+                self.deck.append(Card(SUITS[i], RANKS[j]))
 
         self.shuffle()
 
