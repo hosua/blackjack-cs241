@@ -1,1 +1,1 @@
-python3 blackjack.py
+python3 main.py

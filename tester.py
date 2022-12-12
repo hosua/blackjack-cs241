@@ -1,5 +1,6 @@
 from card_engine import *
 from card_handler import *
+from matplotlib import pyplot as plt
 import numpy as np
 """
 Trial tester
@@ -162,3 +163,37 @@ def run_with_modified_deck(trials: int, ranks: list[str], frequencies: list[int]
         print(f"Removed {freq} x {rank} cards\n")
     print("--------------------------------------------")
     return stats_dict
+
+def get_data_lists(stats_dict: dict):
+    thresh_lst = []
+    loss_lst = []
+    draw_lst = []
+    win_lst = []
+    for key in stats_dict:
+        thresh_lst.append(key)
+        loss_lst.append(stats_dict[key]['lose'])
+        draw_lst.append(stats_dict[key]['draw'])
+        win_lst.append(stats_dict[key]['win'])
+
+    np_thresh = np.array(thresh_lst)
+    np_loss = np.array(loss_lst)
+    np_draw = np.array(draw_lst)
+    np_win = np.array(win_lst)
+
+    return np_thresh, np_loss, np_draw, np_win 
+
+def graph_data(trials: int, np_thresh, np_loss, np_draw, np_win):
+    x_ticks = range(2, 21)
+    y_ticks = range(0, trials, int(trials/10))
+    # x = np.arange(2,20)
+    # y = 2*x+5
+    plt.xticks(x_ticks)
+    plt.yticks(y_ticks)
+    plt.xlabel("Threshhold")
+    plt.ylabel("Losses/Draws/Wins")
+    plt.plot(np_thresh, np_loss, label='Losses')
+    plt.plot(np_thresh, np_draw, label='Draws')
+    plt.plot(np_thresh, np_win, label='Win')
+    plt.legend(loc="upper right")
+    plt.show()
+

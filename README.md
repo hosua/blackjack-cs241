@@ -21,7 +21,7 @@ being the index of the lists. Note that `len(ranks) must == len(frequencies)`.
 auto_play(hit_thresh: int) -> int
 ```
 * Plays a single game, only hits if score is below hit_thresh
-Returns 0 if loss, 1 if draw, and 2 if win
+* Returns 0 if loss, 1 if draw, and 2 if win
 
 ```python
 init_stats_dict() -> dict
