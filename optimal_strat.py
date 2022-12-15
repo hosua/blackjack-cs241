@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 import os
 import re
-import tester
+import sys
 
 SAVE_DIR = 'data'
 
@@ -30,23 +30,23 @@ hard_hands = {
         9: (4,16),
         10: (4,16),
         11: (4,17), # Dealer has ace
-}
+        }
 
 # strategy dict involving player hands with aces
 # key = known_dealer_score, value = player hit range (start, end) inclusive
 soft_hands = {
-    1: (12,18), # Dealer has ace
-    2: (12,18), 
-    3: (12,18), 
-    4: (12,18), 
-    5: (12,18), 
-    6: (12,18), 
-    7: (12,17), 
-    8: (12,17), 
-    9: (12,18), 
-    10: (12,18), 
-    11: (12,18), # Dealer has ace
-}
+        1: (12,18), # Dealer has ace
+        2: (12,18), 
+        3: (12,18), 
+        4: (12,18), 
+        5: (12,18), 
+        6: (12,18), 
+        7: (12,17), 
+        8: (12,17), 
+        9: (12,18), 
+        10: (12,18), 
+        11: (12,18), # Dealer has ace
+        }
 
 # Returns true or false depending on if the player should hit according to the optimal strategy
 # The flag is_hard is true if the player has no aces in their hand
@@ -71,7 +71,7 @@ def optimal_play():
 
     player = Hand()
     dealer = Hand()
-    
+
     # Tests
     # ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10']
     # frequencies = [4] * 9
@@ -180,7 +180,7 @@ def run_optimal(trials: int) -> dict:
             stats_dict['draw'] += 1
         elif res == 2:
             stats_dict['win'] += 1
-    
+
     print(stats_dict)
     return stats_dict
 
@@ -215,17 +215,42 @@ def dump_json(stats_dict: dict, path_prefix: str):
     with open(output_fname, "w") as f:
         json.dump(stats_dict, f, indent=2)
     print(f"Dumped data to {output_fname}")
-    
+
+""" Returns the next available filename given a prefix and extension """
+def get_next_name(path_prefix: str, ext: str) -> str:
+    i: int = 0
+    os.chdir(SAVE_DIR)
+    prefix_pattern = f"^{path_prefix}-(.*)"
+    ext_pattern = f".*{ext}$"
+    extract_number_pattern = "T\d+-"
+    for f in sorted(os.listdir()):
+        root, f_ext = os.path.splitext(os.path.expanduser(f))
+        fname = os.path.basename(root)
+        if re.match(prefix_pattern, root) and re.match(ext_pattern, f_ext):
+            f_num = int(re.match(prefix_pattern, root).group(1))
+            i = f_num+1
+
+    os.chdir("..")
+    return f"{path_prefix}-{str(i).zfill(4)}.{ext}"
+
 
 DATA_FNAME = "optimal"
 if __name__ == "__main__":
     trials = 1000
+
+    if len(sys.argv) > 1:
+        try:
+            trials = int(sys.argv[1])
+        except ValueError:
+            print("Error: Argument must be an integer")
+            exit(1)
+
     stats_dict = run_optimal(trials)
 
     # get next available file name
-    json_fname = tester.get_next_name(DATA_FNAME, "json")
-    plt_fname = tester.get_next_name(DATA_FNAME, "png")
-     
+    json_fname = get_next_name(DATA_FNAME, "json")
+    plt_fname = get_next_name(DATA_FNAME, "png")
+
     graph_plt = graph_data(trials, stats_dict, plt_fname)
 
     dump_json(stats_dict, json_fname)

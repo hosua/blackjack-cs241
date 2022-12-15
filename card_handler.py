@@ -2,7 +2,6 @@ import time
 import collections
 from card_style import *
 from card_engine import *
-import tester
 
 def value(hand):
     value = 0
