@@ -200,7 +200,7 @@ def graph_data(trials: int, stats_dict: dict, fname: str) -> plt:
     freqs = [stats_dict['lose'], stats_dict['draw'], stats_dict['win']]
 
     ax.bar(statuses, freqs)
-    plt.title(f"Optimal")
+    plt.title(f"Unoptimal nofaces")
     ax.set_xticklabels(('losses', 'draws', 'wins'))
     output_fname = f"{SAVE_DIR}/{fname}"
     plt.savefig(output_fname)

@@ -19,9 +19,9 @@ hard_hands = {
         1: (4,17), # Dealer has ace
         2: (4,12),
         3: (4,12),
-        4: (4,11),
-        5: (4,11),
-        6: (4,11),
+        4: (4,16),
+        5: (4,16),
+        6: (4,16),
         7: (4,16),
         8: (4,16),
         9: (4,16),
@@ -196,7 +196,7 @@ def graph_data(trials: int, stats_dict: dict, fname: str) -> plt:
     freqs = [stats_dict['lose'], stats_dict['draw'], stats_dict['win']]
 
     ax.bar(statuses, freqs)
-    plt.title(f"Optimal")
+    plt.title(f"Experiment")
     ax.set_xticklabels(('losses', 'draws', 'wins'))
     output_fname = f"{SAVE_DIR}/{fname}"
     plt.savefig(output_fname)
@@ -216,7 +216,7 @@ def dump_json(stats_dict: dict, path_prefix: str):
     print(f"Dumped data to {output_fname}")
 
 
-DATA_FNAME = "optimal-nofaces"
+DATA_FNAME = "experiment-nofaces"
 if __name__ == "__main__":
     trials = 1000
     stats_dict = run_optimal(trials)
