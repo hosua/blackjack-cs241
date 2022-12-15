@@ -1,3 +1,3 @@
 # Blackjack
 
-Too lazy to keep this up to date
+Too lazy to keep README up to date
