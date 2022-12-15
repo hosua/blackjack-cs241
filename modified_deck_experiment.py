@@ -11,11 +11,8 @@ import tester
 SAVE_DIR = 'data'
 
 """
-THIS IS OUR CONTROL, running this script will give us the data of the expected outcome when
-following the optimal strategy depicted by this chart: https://www.kjartan.co.uk/games/pix/cards/Blackjack%20full%20guide.pdf
-in a STANDARD, unmodified game of Blackjack
+This script will be used to test the strategies we come up with against the deck with no faces.
 """
-
 # strategy dict involving player hands with no aces
 # key = known_dealer_score, value = player hit range (start, end) inclusive
 hard_hands = {
@@ -30,23 +27,23 @@ hard_hands = {
         9: (4,16),
         10: (4,16),
         11: (4,17), # Dealer has ace
-}
+        }
 
 # strategy dict involving player hands with aces
 # key = known_dealer_score, value = player hit range (start, end) inclusive
 soft_hands = {
-    1: (12,18), # Dealer has ace
-    2: (12,18), 
-    3: (12,18), 
-    4: (12,18), 
-    5: (12,18), 
-    6: (12,18), 
-    7: (12,17), 
-    8: (12,17), 
-    9: (12,18), 
-    10: (12,18), 
-    11: (12,18), # Dealer has ace
-}
+        1: (12,18), # Dealer has ace
+        2: (12,18), 
+        3: (12,18), 
+        4: (12,18), 
+        5: (12,18), 
+        6: (12,18), 
+        7: (12,17), 
+        8: (12,17), 
+        9: (12,18), 
+        10: (12,18), 
+        11: (12,18), # Dealer has ace
+        }
 
 # Returns true or false depending on if the player should hit according to the optimal strategy
 # The flag is_hard is true if the player has no aces in their hand
@@ -65,19 +62,21 @@ def decision_maker(player_score: int, known_dealer_score: int, is_hard: int) -> 
             return True
     return False
 
-def optimal_play():
+# Note that this isn't an "optimal strat" for the given deck, this is using the same optimal strategy
+# from a normal deck to check if the results change for better or for worse.
+def optimal_strat_nofaces():
     # Creates deck for game
     deck = Deck("Blackjack")
 
     player = Hand()
     dealer = Hand()
     
-    # Tests
-    # ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10']
-    # frequencies = [4] * 9
-    # card_types = dict(zip(ranks, frequencies))
-    # if card_types:
-    #     deck.remove_from_deck(card_types)
+    # NO FACE CARDS
+    ranks = ['Jack', 'Queen', 'King']
+    frequencies = [4] * 3
+    card_types = dict(zip(ranks, frequencies))
+    if card_types:
+        deck.remove_from_deck(card_types)
 
     dealer_start(dealer, deck)
     player_start(player, deck)
@@ -173,14 +172,14 @@ def run_optimal(trials: int) -> dict:
     stats_dict = {'lose': 0, 'draw': 0, 'win': 0}
     thresh_min, thresh_max = 2, 20
     for trial in range(trials):
-        res = optimal_play()
+        res = optimal_strat_nofaces()
         if res == 0:
             stats_dict['lose'] += 1
         elif res == 1:
             stats_dict['draw'] += 1
         elif res == 2:
             stats_dict['win'] += 1
-    
+
     print(stats_dict)
     return stats_dict
 
@@ -215,9 +214,9 @@ def dump_json(stats_dict: dict, path_prefix: str):
     with open(output_fname, "w") as f:
         json.dump(stats_dict, f, indent=2)
     print(f"Dumped data to {output_fname}")
-    
 
-DATA_FNAME = "optimal"
+
+DATA_FNAME = "optimal-nofaces"
 if __name__ == "__main__":
     trials = 1000
     stats_dict = run_optimal(trials)
@@ -225,7 +224,7 @@ if __name__ == "__main__":
     # get next available file name
     json_fname = tester.get_next_name(DATA_FNAME, "json")
     plt_fname = tester.get_next_name(DATA_FNAME, "png")
-     
+
     graph_plt = graph_data(trials, stats_dict, plt_fname)
 
     dump_json(stats_dict, json_fname)

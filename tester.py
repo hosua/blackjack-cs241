@@ -3,7 +3,6 @@ from card_handler import *
 from matplotlib import pyplot as plt
 import numpy as np
 import json
-from datetime import datetime
 import os
 import re
 
@@ -239,12 +238,6 @@ def graph_data(trials: int, np_thresh, np_loss, np_draw, np_win, fname: str, ran
     plt.savefig(output_fname)
     print(f"Saved graph to {output_fname}")
     return plt
-
-""" Used for generating unique file name (not using this anymore)"""
-def get_datetime() -> str:
-    curr_dt = datetime.now()
-    dt_str = curr_dt.strftime("%Y-%m-%d_%H-%M-%S")
-    return dt_str
 
 """ Returns the next available filename given a prefix and extension """
 def get_next_name(path_prefix: str, ext: str) -> str:
