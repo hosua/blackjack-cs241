@@ -53,6 +53,9 @@ def auto_play(hit_thresh: int, card_types: dict=None) -> int:
     
     dealer_start(dealer, deck)
     player_start(player, deck)
+    
+    # TODO: Will be an important parameter for decision making
+    known_dealer_score = value(dealer)
     while True:
         if total_value(player) == 21:
             dealer_open(dealer)
@@ -152,7 +155,7 @@ def run(trials: int) -> dict:
     print(f"{trials} trials were ran with no modifications to the deck")
     return stats_dict
 
-def run_with_modified_deck(trials: int, ranks: list[str], frequencies: list[int]) -> dict:
+def run_with_modified_deck(trials: int, ranks: list[str]=[], frequencies: list[int]=[]) -> dict:
 
     if len(ranks) != len(frequencies):
         print("ERROR: length of frequences must match length of ranks")
@@ -207,14 +210,21 @@ def get_data_lists(stats_dict: dict):
     return np_thresh, np_loss, np_draw, np_win 
 
 """ Returns plt object """
-def graph_data(trials: int, np_thresh, np_loss, np_draw, np_win, ranks: list[str], frequencies: list[int], dt_str: str) -> plt:
+def graph_data(trials: int, np_thresh, np_loss, np_draw, np_win, fname: str, ranks: list[str]=[], frequencies: list[int]=[]) -> plt:
     x_ticks = range(2, 21)
-    y_ticks = range(0, trials, int(trials/10))
+    y_ticks: int
+    if trials > 10:
+        y_ticks = range(0, trials, trials//10)
+    else:
+        y_ticks = range(0, 10)
     # x = np.arange(2,20)
     # y = 2*x+5
-    output = "Removed: "
-    for i in range(len(ranks)):
-        output += f"{frequencies[i]} x {ranks[i]}, "
+    output = ""
+    if len(ranks):
+        output = "Removed: "
+        for i in range(len(ranks)):
+            output += f"{frequencies[i]} x {ranks[i]}, "
+
     # plt.title(f"Trials: {trials}\t{output}")
     plt.title(f"{output}")
     plt.xticks(x_ticks)
@@ -225,7 +235,7 @@ def graph_data(trials: int, np_thresh, np_loss, np_draw, np_win, ranks: list[str
     plt.plot(np_thresh, np_draw, label='Draws')
     plt.plot(np_thresh, np_win, label='Wins')
     plt.legend(loc="upper right")
-    output_fname = f"{SAVE_DIR}/{dt_str}"
+    output_fname = f"{SAVE_DIR}/{fname}"
     plt.savefig(output_fname)
     print(f"Saved graph to {output_fname}")
     return plt

@@ -68,11 +68,11 @@ class Deck:
     }
     """
     def remove_from_deck(self, card_types: dict):
-        
         for rank in card_types:
             freq = card_types[rank]
             for card in self.deck:
                 if card.rank.lower() == rank.lower():
+                    # print(f"removed: {card.get_rank()} {card.get_suit()}")
                     self.deck.remove(card)
                     freq -= 1
                 if freq == 0:

@@ -11,7 +11,7 @@ import tester
 import numpy as np
 import sys
 
-""" You can enter the number of trials as a command line argument (default 1000) """
+""" You can enter the number of trials as a command line argument (default 1) """
 
 if __name__ == "__main__":
     trials: int = 1000
@@ -24,33 +24,28 @@ if __name__ == "__main__":
             exit(1)
 
     DATA_FNAME = f"T{trials}"
+    
+    # get next available file name
+    json_fname = tester.get_next_name(DATA_FNAME, "json")
+    plt_fname = tester.get_next_name(DATA_FNAME, "png")
 
     """ run without modified deck """
     # stats_dict = tester.run(trials)
+    # np_thresh, np_loss, np_draw, np_win = tester.get_data_lists(stats_dict)
+    # graph_plt = tester.graph_data(trials, np_thresh, np_loss, np_draw, np_win, plt_fname)
 
     """ run with modified deck """
-    # ranks = ["Ace", "9", "8"]
-    # frequencies = [4, 3, 2]
-
     # remove all face cards
     ranks = ["jack", "queen", "king"]
     frequencies = [4, 4, 4]
-    
-    json_fname = tester.get_next_name(DATA_FNAME, "json")
-    plt_fname = tester.get_next_name(DATA_FNAME, "png")
-    
     stats_dict = tester.run_with_modified_deck(trials, ranks, frequencies)
 
     tester.print_stats_dict(stats_dict)
-
+    
     np_thresh, np_loss, np_draw, np_win = tester.get_data_lists(stats_dict)
+    graph_plt = tester.graph_data(trials, np_thresh, np_loss, np_draw, np_win, plt_fname, ranks, frequencies)
     
-    # Generate datetime string to use as output filename
-    # dt_str = tester.get_datetime()
-
-    graph_plt = tester.graph_data(trials, np_thresh, np_loss, np_draw, np_win, ranks, frequencies, plt_fname)
-    
-    # plt.show() 
+    # plt.show() # comment this out if you want to run tests without stopping
     tester.dump_json(stats_dict, json_fname)
 
     
