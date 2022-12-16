@@ -9,6 +9,5 @@ if [ -z "$trials" ]; then
 fi
 
 for i in $(eval echo "{1..$iter}"); do
-    python3 unoptimal_nofaces.py "$trials"
+    python3 optimal_standard.py "$trials"
 done
-
