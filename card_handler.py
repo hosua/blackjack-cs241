@@ -66,7 +66,7 @@ def calc_value(hand):
 
 def check_hard(hand: Hand) -> bool:
     min_val = calc_value(hand)
-    print(f"min_val: {min_val}")
+    # print(f"min_val: {min_val}")
     # print(f"has aces: {has_aces(hand)}")
     if not has_aces(hand):
         return True 

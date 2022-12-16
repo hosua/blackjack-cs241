@@ -4,6 +4,6 @@ if [ -z "$iter" ]; then
     iter=0
 fi
 
-for i in $(eval echo "{0..$iter}"); do
+for i in $(eval echo "{1..$iter}"); do
     python3 modified_experiment.py
 done

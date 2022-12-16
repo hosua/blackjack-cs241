@@ -17,8 +17,8 @@ This script will be used to test the strategies we come up with against the deck
 # key = known_dealer_score, value = player hit range (start, end) inclusive
 hard_hands = {
         1: (4,17), # Dealer has ace
-        2: (4,12),
-        3: (4,12),
+        2: (4,16),
+        3: (4,16),
         4: (4,16),
         5: (4,16),
         6: (4,16),
@@ -49,15 +49,15 @@ soft_hands = {
 # The flag is_hard is true if the player has no aces in their hand
 def decision_maker(player_score: int, known_dealer_score: int, is_hard: int) -> bool:
     if is_hard:
-        print("HARD HAND")
+        # print("HARD HAND")
         hit_list = list(range(hard_hands[known_dealer_score][0], hard_hands[known_dealer_score][1]+1))
-        print(f"Player should hit if score is in: {hit_list}")
+        # print(f"Player should hit if score is in: {hit_list}")
         if player_score in hit_list:
             return True
     else:
-        print("SOFT HAND")
+        # print("SOFT HAND")
         hit_list = list(range(soft_hands[known_dealer_score][0], soft_hands[known_dealer_score][1]+1))
-        print(f"Player should hit if score is in: {hit_list}")
+        # print(f"Player should hit if score is in: {hit_list}")
         if player_score in hit_list:
             return True
     return False
@@ -172,6 +172,8 @@ def run_optimal(trials: int) -> dict:
     stats_dict = {'lose': 0, 'draw': 0, 'win': 0}
     thresh_min, thresh_max = 2, 20
     for trial in range(trials):
+        if (trial % 10000 == 0):
+            print(trial)
         res = optimal_strat_nofaces()
         if res == 0:
             stats_dict['lose'] += 1
@@ -196,7 +198,7 @@ def graph_data(trials: int, stats_dict: dict, fname: str) -> plt:
     freqs = [stats_dict['lose'], stats_dict['draw'], stats_dict['win']]
 
     ax.bar(statuses, freqs)
-    plt.title(f"Experiment")
+    plt.title(f"Optimal No Faces")
     ax.set_xticklabels(('losses', 'draws', 'wins'))
     output_fname = f"{SAVE_DIR}/{fname}"
     plt.savefig(output_fname)
@@ -232,10 +234,10 @@ def get_next_name(path_prefix: str, ext: str) -> str:
     os.chdir("..")
     return f"{path_prefix}-{str(i).zfill(4)}.{ext}"
 
-DATA_FNAME = "experiment-nofaces"
+DATA_FNAME = "optimal-no-faces"
 if __name__ == "__main__":
-    trials: int = 1000
-
+    trials: int = 1000000
+    
     if len(sys.argv) > 1:
         try:
             trials = int(sys.argv[1])
