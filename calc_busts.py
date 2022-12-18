@@ -70,15 +70,7 @@ def decision_maker(player_score: int, known_dealer_score: int, is_hard: int) -> 
 # my code works)
 def optimal_strat_nofaces():
     # Creates deck for game
-    deck = Deck("Blackjack")
-    
-    # Remove le face cards
-    ranks = ['Jack', 'Queen', 'King']
-    frequencies = [4] * 3
-    card_types = dict(zip(ranks, frequencies))
-
-    if card_types:
-        deck.remove_from_deck(card_types)
+    deck = Deck("Blackjack", removed=True)
 
     player = Hand()
     dealer = Hand()
@@ -187,8 +179,6 @@ def run_optimal(trials: int) -> dict:
         elif res == 2:
             stats_dict['win'] += 1
         elif res[0] == 4: # dealer busted
-            if res[1] == 'Jack' or res[1] == 'Queen' or res[1] == 'King':
-                continue
             stats_dict['dealer_bust'] += res[1]
 
     print(stats_dict)
@@ -216,6 +206,13 @@ def graph_data(trials: int, stats_dict: dict, fname: str) -> plt:
     stats_dict['dealer_bust'] = clean_data(sorted(stats_dict['dealer_bust']))
     bust_lst = stats_dict['dealer_bust']
     dealer_cards_when_dealer_bust = collections.Counter(bust_lst)
+    
+    bust_sum = sum(dealer_cards_when_dealer_bust.values())
+
+    # Sanitize stats_dict output to contain the frequences
+    stats_dict['dealer_bust'] = dealer_cards_when_dealer_bust
+    # Add the total number of dealer busts to make calculating probabilities easier
+    stats_dict['dealer_bust']['total'] = bust_sum
     rank_names = dealer_cards_when_dealer_bust.keys()
     rank_freqs = dealer_cards_when_dealer_bust.values()
     ax.bar(rank_names, rank_freqs)
@@ -224,7 +221,7 @@ def graph_data(trials: int, stats_dict: dict, fname: str) -> plt:
     output_fname = f"{SAVE_DIR}/{fname}"
     plt.savefig(output_fname)
     print(f"Saved graph to {output_fname}")
-    return plt
+    return plt, stats_dict
 
 """ Dump stats_dict into json file """
 def dump_json(stats_dict: dict, path_prefix: str):
@@ -271,8 +268,9 @@ if __name__ == "__main__":
     # get next available file name
     json_fname = get_next_name(DATA_FNAME, "json")
     plt_fname = get_next_name(DATA_FNAME, "png")
-
-    graph_plt = graph_data(trials, stats_dict, plt_fname)
+    
+    # Please consult Josh if this is confusing and you have questions, I'm too lazy to do this properly
+    graph_plt, stats_dict = graph_data(trials, stats_dict, plt_fname)
 
     dump_json(stats_dict, json_fname)
     # graph_plt.show()
