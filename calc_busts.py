@@ -87,11 +87,11 @@ def optimal_strat_nofaces():
             if total_value(dealer) != 21:
                 if not HIDE_OUTPUT: 
                     print("Blackjack! Player wins!\n")
-                return 2
+                return 2, dealer.hand[0].get_rank()
             else:
                 if not HIDE_OUTPUT: 
                     print("Tie!\n")
-                return 1
+                return 1, dealer.hand[0].get_rank()
         if decision_maker(total_value(player), known_dealer_score, is_hard):
             if not HIDE_OUTPUT:
                 print("PLAYER HIT")
@@ -101,15 +101,15 @@ def optimal_strat_nofaces():
                 if total_value(dealer) == 21:
                     if not HIDE_OUTPUT: 
                         print("Tie!\n")
-                    return 1
+                    return 1, dealer.hand[0].get_rank()
                 else:
                     if not HIDE_OUTPUT: 
                         print("Blackjack! Player wins!\n")
-                    return 2
+                    return 2, dealer.hand[0].get_rank()
             elif total_value(player) > 21:
                 if not HIDE_OUTPUT: 
                     print("Player bust! Player loses!\n")
-                return 0
+                return 0, dealer.hand[0].get_rank()
         else:
             if not HIDE_OUTPUT:
                 print("PLAYER STAND")
@@ -120,11 +120,11 @@ def optimal_strat_nofaces():
                 if total_value(dealer) == total_value(player):
                     if not HIDE_OUTPUT: 
                         print("Tie!\n")
-                    return 1
+                    return 1, dealer.hand[0].get_rank()
                 elif total_value(dealer) == 21:
                     if not HIDE_OUTPUT: 
                         print("Player loses!\n")
-                    return 0
+                    return 0, dealer.hand[0].get_rank()
                 elif total_value(dealer) > 21:
                     if not HIDE_OUTPUT: 
                         print("Dealer bust! Player wins!\n")
@@ -132,21 +132,21 @@ def optimal_strat_nofaces():
                 elif total_value(dealer) > total_value(player):
                     if not HIDE_OUTPUT: 
                         print("Player loses!\n")
-                    return 0
+                    return 0, dealer.hand[0].get_rank()
                 else:
                     if not HIDE_OUTPUT: 
                         print("Player wins!\n")
-                    return 2
+                    return 2, dealer.hand[0].get_rank()
             else:
                 dealer_open(dealer)
                 if total_value(dealer) == total_value(player):
                     if not HIDE_OUTPUT: 
                         print("Tie!\n")
-                    return 1
+                    return 1, dealer.hand[0].get_rank()
                 if total_value(dealer) == 21:
                     if not HIDE_OUTPUT: 
                         print("Player loses!\n")
-                    return 0
+                    return 0, dealer.hand[0].get_rank()
                 if total_value(dealer) > 21:
                     if not HIDE_OUTPUT: 
                         print("Dealer bust! Player wins!\n")
@@ -154,11 +154,11 @@ def optimal_strat_nofaces():
                 if total_value(dealer) > total_value(player):
                     if not HIDE_OUTPUT: 
                         print("Player loses!\n")
-                    return 0
+                    return 0, dealer.hand[0].get_rank()
                 else:
                     if not HIDE_OUTPUT: 
                         print("Player wins!\n")
-                    return 2
+                    return 2, dealer.hand[0].get_rank()
 
 def run_optimal(trials: int) -> dict:
     stats_dict: dict
@@ -166,33 +166,38 @@ def run_optimal(trials: int) -> dict:
     thresh_max: int
     res: int # 0 -> lose, 1 -> draw, 2 -> win
 
-    stats_dict = {'lose': 0, 'draw': 0, 'win': 0, 'dealer_bust': []}
+    stats_dict = {'lose': 0, 'draw': 0, 'win': 0, 'dealer_bust': [], 'dealer_card_freqs': []}
     thresh_min, thresh_max = 2, 20
     for trial in range(trials):
         if (trial % 10000 == 0):
             print(trial)
         res = optimal_strat_nofaces()
-        if res == 0:
+        if res[0] == 0:
             stats_dict['lose'] += 1
-        elif res == 1:
+        elif res[0] == 1:
             stats_dict['draw'] += 1
-        elif res == 2:
+        elif res[0] == 2:
             stats_dict['win'] += 1
         elif res[0] == 4: # dealer busted
             stats_dict['dealer_bust'] += res[1]
 
+        # Add dealer's starting card frequencies
+        stats_dict['dealer_card_freqs'] += res[1]
+
+    stats_dict['dealer_bust'] = clean_data(sorted(stats_dict['dealer_bust']))
+    stats_dict['dealer_card_freqs'] = clean_data(sorted(stats_dict['dealer_card_freqs']))
+    
     print(stats_dict)
     return stats_dict
 
-# Do not ask why I have to sanitize the output like this b/c I don't know why either
+# Do not ask why I have to sanitize the output like this just trust 
 def clean_data(bust_lst: list):
     remove_these = ['a', 'c', 'e', 'k', 'n', 'u','g', 'i', '0', '1']
     for item in remove_these:
         bust_lst = list(filter((item).__ne__, bust_lst))
     return bust_lst
 
-
-""" Returns plt object """
+""" Returns plt object and sanitized stats_dict """
 def graph_data(trials: int, stats_dict: dict, fname: str) -> plt:
     y_ticks: int
     if trials > 10:
@@ -201,25 +206,29 @@ def graph_data(trials: int, stats_dict: dict, fname: str) -> plt:
         y_ticks = range(0, 10)
 
     fig, ax = plt.subplots()
-    # statuses = ['losses', 'draws', 'wins']
-    # freqs = [stats_dict['lose'], stats_dict['draw'], stats_dict['win']]
-    stats_dict['dealer_bust'] = clean_data(sorted(stats_dict['dealer_bust']))
+    # JFC what the hell am I doing
     bust_lst = stats_dict['dealer_bust']
     dealer_cards_when_dealer_bust = collections.Counter(bust_lst)
-    
+        
     bust_sum = sum(dealer_cards_when_dealer_bust.values())
 
     # Sanitize stats_dict output to contain the frequences
     stats_dict['dealer_bust'] = dealer_cards_when_dealer_bust
-    # Add the total number of dealer busts to make calculating probabilities easier
-    stats_dict['dealer_bust']['total'] = bust_sum
     rank_names = dealer_cards_when_dealer_bust.keys()
     rank_freqs = dealer_cards_when_dealer_bust.values()
     ax.bar(rank_names, rank_freqs)
+
     plt.title(f"Dealer Bust Freqs")
     ax.set_xticklabels((list(rank_names)))
     output_fname = f"{SAVE_DIR}/{fname}"
     plt.savefig(output_fname)
+    
+    stats_dict['dealer_card_freqs'] = collections.Counter(stats_dict['dealer_card_freqs'])
+    freq_sum = sum(stats_dict['dealer_card_freqs'].values())
+    stats_dict['dealer_card_freqs']['total'] = freq_sum
+
+    # Add the total number of dealer busts to make calculating probabilities easier
+    stats_dict['dealer_bust']['total'] = bust_sum
     print(f"Saved graph to {output_fname}")
     return plt, stats_dict
 
