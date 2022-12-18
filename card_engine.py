@@ -68,7 +68,7 @@ class Deck:
 
         # Add cards to the deck
         for i in range(len(SUITS)):
-            for j in range(1, 14):
+            for j in range(1, 11):
                 self.deck.append(Card(SUITS[i], RANKS[j]))
 
         self.shuffle()
@@ -88,7 +88,7 @@ class Deck:
             freq = card_types[rank]
             for card in self.deck:
                 if card.rank.lower() == rank.lower():
-                    # print(f"removed: {card.get_rank()} {card.get_suit()}")
+                    print(f"removed: {card.get_rank()} {card.get_suit()}")
                     self.deck.remove(card)
                     freq -= 1
                 if freq == 0:
@@ -100,7 +100,7 @@ class Deck:
         return self.deck
     
     # Show all cards in current deck, passes choice argument for face up or down cards
-    def show_info(self, choice=''):
+    def show_info(self, choice='u'):
         if len(self.deck) == 0:
             print("\nNo cards left in deck, resetting deck")
             self.create_deck()

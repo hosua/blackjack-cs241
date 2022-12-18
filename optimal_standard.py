@@ -72,12 +72,6 @@ def optimal_play():
     player = Hand()
     dealer = Hand()
 
-    # Tests
-    # ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10']
-    # frequencies = [4] * 9
-    # card_types = dict(zip(ranks, frequencies))
-    # if card_types:
-    #     deck.remove_from_deck(card_types)
 
     dealer_start(dealer, deck)
     player_start(player, deck)

@@ -71,16 +71,17 @@ def decision_maker(player_score: int, known_dealer_score: int, is_hard: int) -> 
 def optimal_strat_nofaces():
     # Creates deck for game
     deck = Deck("Blackjack")
-
-    player = Hand()
-    dealer = Hand()
     
     # Remove le face cards
     ranks = ['Jack', 'Queen', 'King']
     frequencies = [4] * 3
     card_types = dict(zip(ranks, frequencies))
+
     if card_types:
         deck.remove_from_deck(card_types)
+
+    player = Hand()
+    dealer = Hand()
 
     dealer_start(dealer, deck)
     player_start(player, deck)
@@ -186,6 +187,8 @@ def run_optimal(trials: int) -> dict:
         elif res == 2:
             stats_dict['win'] += 1
         elif res[0] == 4: # dealer busted
+            if res[1] == 'Jack' or res[1] == 'Queen' or res[1] == 'King':
+                continue
             stats_dict['dealer_bust'] += res[1]
 
     print(stats_dict)

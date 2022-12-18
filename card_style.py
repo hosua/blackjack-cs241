@@ -1,5 +1,5 @@
 # Turn this off to show all print statements (This will slow execution time by a lot)
-HIDE_OUTPUT = False
+HIDE_OUTPUT = True
 
 def make_card(card):
     look = []

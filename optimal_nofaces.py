@@ -67,9 +67,6 @@ def decision_maker(player_score: int, known_dealer_score: int, is_hard: int) -> 
 def optimal_strat_nofaces():
     # Creates deck for game
     deck = Deck("Blackjack")
-
-    player = Hand()
-    dealer = Hand()
     
     # NO FACE CARDS
     ranks = ['Jack', 'Queen', 'King']
@@ -77,6 +74,9 @@ def optimal_strat_nofaces():
     card_types = dict(zip(ranks, frequencies))
     if card_types:
         deck.remove_from_deck(card_types)
+
+    player = Hand()
+    dealer = Hand()
 
     dealer_start(dealer, deck)
     player_start(player, deck)
