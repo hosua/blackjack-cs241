@@ -66,14 +66,7 @@ def decision_maker(player_score: int, known_dealer_score: int, is_hard: int) -> 
 # from a normal deck to check if the results change for better or for worse.
 def optimal_strat_nofaces():
     # Creates deck for game
-    deck = Deck("Blackjack")
-    
-    # NO FACE CARDS
-    ranks = ['Jack', 'Queen', 'King']
-    frequencies = [4] * 3
-    card_types = dict(zip(ranks, frequencies))
-    if card_types:
-        deck.remove_from_deck(card_types)
+    deck = Deck("Blackjack", removed=True)
 
     player = Hand()
     dealer = Hand()

@@ -56,20 +56,24 @@ class Card:
 
 # Creates a deck object, init a fresh new deck when created
 class Deck:
-    def __init__(self, name):
+    def __init__(self, name, removed=False):
         self.name = name
         self.deck = []
-        self.create_deck()
+        self.create_deck(removed)
     
     # Creates the deck by adding cards into self.deck
-    def create_deck(self):
+    def create_deck(self, removed=False):
         # Refreshes the deck
         self.deck = []
 
         # Add cards to the deck
         for i in range(len(SUITS)):
-            for j in range(1, 11):
-                self.deck.append(Card(SUITS[i], RANKS[j]))
+            if removed:
+                for j in range(1, 11):
+                    self.deck.append(Card(SUITS[i], RANKS[j]))
+            else:
+                for j in range(1, 14):
+                    self.deck.append(Card(SUITS[i], RANKS[j]))
 
         self.shuffle()
 
@@ -83,16 +87,6 @@ class Deck:
            .
     }
     """
-    def remove_from_deck(self, card_types: dict):
-        for rank in card_types:
-            freq = card_types[rank]
-            for card in self.deck:
-                if card.rank.lower() == rank.lower():
-                    print(f"removed: {card.get_rank()} {card.get_suit()}")
-                    self.deck.remove(card)
-                    freq -= 1
-                if freq == 0:
-                    break
     
     # Shuffle the deck
     def shuffle(self):
