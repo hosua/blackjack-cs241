@@ -178,24 +178,20 @@ def run_optimal(trials: int) -> dict:
             stats_dict['draw'] += 1
         elif res[0] == 2:
             stats_dict['win'] += 1
-        elif res[0] == 4: # dealer busted
+
+        if res[0] == 4: # dealer busted
             stats_dict['dealer_bust'] += res[1]
+            stats_dict['win'] += 1
 
         # Add dealer's starting card frequencies
-        stats_dict['dealer_card_freqs'] += res[1]
-
-    stats_dict['dealer_bust'] = clean_data(sorted(stats_dict['dealer_bust']))
-    stats_dict['dealer_card_freqs'] = clean_data(sorted(stats_dict['dealer_card_freqs']))
+        stats_dict['dealer_card_freqs'] += [res[1]] 
+        # I have no fucking idea why Python just assumes that I want to split a string into
+        # chars when I append it to a list here but WHATEVER.
+    stats_dict['dealer_bust'] = sorted(stats_dict['dealer_bust'])
+    stats_dict['dealer_card_freqs'] = sorted(stats_dict['dealer_card_freqs'])
     
     print(stats_dict)
     return stats_dict
-
-# Do not ask why I have to sanitize the output like this just trust 
-def clean_data(bust_lst: list):
-    remove_these = ['a', 'c', 'e', 'k', 'n', 'u','g', 'i', '0', '1']
-    for item in remove_these:
-        bust_lst = list(filter((item).__ne__, bust_lst))
-    return bust_lst
 
 """ Returns plt object and sanitized stats_dict """
 def graph_data(trials: int, stats_dict: dict, fname: str) -> plt:
