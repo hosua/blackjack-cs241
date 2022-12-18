@@ -180,7 +180,7 @@ def run_optimal(trials: int) -> dict:
             stats_dict['win'] += 1
 
         if res[0] == 4: # dealer busted
-            stats_dict['dealer_bust'] += res[1]
+            stats_dict['dealer_bust'] += [res[1]]
             stats_dict['win'] += 1
 
         # Add dealer's starting card frequencies
