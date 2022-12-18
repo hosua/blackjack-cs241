@@ -162,12 +162,9 @@ def optimal_strat_nofaces():
 
 def run_optimal(trials: int) -> dict:
     stats_dict: dict
-    thresh_min: int
-    thresh_max: int
     res: int # 0 -> lose, 1 -> draw, 2 -> win
 
     stats_dict = {'lose': 0, 'draw': 0, 'win': 0, 'dealer_bust': [], 'dealer_card_freqs': []}
-    thresh_min, thresh_max = 2, 20
     for trial in range(trials):
         if (trial % 10000 == 0):
             print(trial)
@@ -180,13 +177,13 @@ def run_optimal(trials: int) -> dict:
             stats_dict['win'] += 1
 
         if res[0] == 4: # dealer busted
+            # I have no fucking idea why Python just assumes that I want to split a string into
+            # chars when I append it to a list here but WHATEVER.
             stats_dict['dealer_bust'] += [res[1]]
             stats_dict['win'] += 1
 
         # Add dealer's starting card frequencies
         stats_dict['dealer_card_freqs'] += [res[1]] 
-        # I have no fucking idea why Python just assumes that I want to split a string into
-        # chars when I append it to a list here but WHATEVER.
     stats_dict['dealer_bust'] = sorted(stats_dict['dealer_bust'])
     stats_dict['dealer_card_freqs'] = sorted(stats_dict['dealer_card_freqs'])
     

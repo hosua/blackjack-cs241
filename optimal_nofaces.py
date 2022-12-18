@@ -158,12 +158,9 @@ def optimal_strat_nofaces():
 
 def run_optimal(trials: int) -> dict:
     stats_dict: dict
-    thresh_min: int
-    thresh_max: int
     res: int # 0 -> lose, 1 -> draw, 2 -> win
 
     stats_dict = {'lose': 0, 'draw': 0, 'win': 0}
-    thresh_min, thresh_max = 2, 20
     for trial in range(trials):
         if (trial % 10000 == 0):
             print(trial)
