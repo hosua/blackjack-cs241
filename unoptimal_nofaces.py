@@ -228,10 +228,18 @@ def get_next_name(path_prefix: str, ext: str) -> str:
     os.chdir("..")
     return f"{path_prefix}-{str(i).zfill(4)}.{ext}"
 
+def check_data_dir():
+    dirs = [d for d in os.listdir('.') if not os.path.isfile(d)]
+    if SAVE_DIR not in dirs:
+        os.makedirs(SAVE_DIR)
+    for d in dirs:
+        print(d)
+
+
 DATA_FNAME = "unoptimal-nofaces"
 if __name__ == "__main__":
-    trials: int = 1000000
-
+    trials: int = 1000
+    check_data_dir()
     if len(sys.argv) > 1:
         try:
             trials = int(sys.argv[1])

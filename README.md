@@ -1,10 +1,10 @@
 # Blackjack
 
-1. Run ``./run-optimal-standard.sh 10 100`` to generate 10 sets of 1000 trials of data using standard optimal strategy on standard deck.
+1. Run ``python3 optimal_standard.py 1000`` to generate 1000 trials of Blackjack data using standard optimal strategy on standard deck.
 
-2. Run ``./run-unoptimal-nofaces.sh 10 100`` to generate 10 sets of 1000 trials of data using standard optimal strategy on deck with no faces (The unoptimal strategy).
+2. Run ``python3 unoptimal_standard.py 1000`` to generate 1000 trials of Blackjack data using standard optimal strategy on deck with no faces (The unoptimal strategy).
 
-3. Run ``./run-optimal-nofaces.sh 10 100`` to generate 10 sets of 1000 trials of data using our newly found optimized strategy on deck with no face cards.
+3. Run ``python3 optimal_nofaces.py 1000`` to generate 1000 trials of Blackjack data using our newly found optimized strategy on deck with no face cards.
 
 # Important Resources
 
