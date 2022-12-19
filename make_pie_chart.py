@@ -25,7 +25,7 @@ def json_to_pie(fname: str):
     rank_percents = [(p/t)*100 for p, t in zip(rank_freqs, rank_totals) ]
     
     plt.pie(rank_freqs, textprops={'fontsize': 8})
-    rank_names = ['%s, %1.1f %%' % (l, s) for l, s in zip(rank_names,rank_percents)]
+    rank_names = ['%s, %1.1f%%' % (l, s) for l, s in zip(rank_names,rank_percents)]
     # rank_names = ['{, {s:0.1f}%' for l, s in zip(rank_names, rank_freqs)]
     plt.legend(labels=rank_names, loc="right", bbox_to_anchor=(1.3,0.8))
 
