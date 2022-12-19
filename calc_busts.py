@@ -3,7 +3,6 @@ from card_handler import *
 from matplotlib import pyplot as plt
 import numpy as np
 import json
-from datetime import datetime
 import os
 import re
 import sys
@@ -187,7 +186,7 @@ def run_optimal(trials: int) -> dict:
     stats_dict['dealer_bust'] = sorted(stats_dict['dealer_bust'])
     stats_dict['dealer_card_freqs'] = sorted(stats_dict['dealer_card_freqs'])
     
-    print(stats_dict)
+    # print(stats_dict)
     return stats_dict
 
 """ Returns plt object and sanitized stats_dict """
@@ -199,6 +198,7 @@ def graph_data(trials: int, stats_dict: dict, fname: str) -> plt:
         y_ticks = range(0, 10)
 
     fig, ax = plt.subplots()
+
     # JFC what the hell am I doing
     bust_lst = stats_dict['dealer_bust']
     dealer_cards_when_dealer_bust = collections.Counter(bust_lst)
@@ -210,12 +210,12 @@ def graph_data(trials: int, stats_dict: dict, fname: str) -> plt:
     rank_names = dealer_cards_when_dealer_bust.keys()
     rank_freqs = dealer_cards_when_dealer_bust.values()
     ax.bar(rank_names, rank_freqs)
-
-    plt.title(f"Dealer Bust Freqs")
+    
+    plt.title(f"Dealer Bust Frequencies")
     ax.set_xticklabels((list(rank_names)))
     output_fname = f"{SAVE_DIR}/{fname}"
     plt.savefig(output_fname)
-    
+     
     stats_dict['dealer_card_freqs'] = collections.Counter(stats_dict['dealer_card_freqs'])
     freq_sum = sum(stats_dict['dealer_card_freqs'].values())
     stats_dict['dealer_card_freqs']['total'] = freq_sum
@@ -258,8 +258,6 @@ def check_data_dir():
     dirs = [d for d in os.listdir('.') if not os.path.isfile(d)]
     if SAVE_DIR not in dirs:
         os.makedirs(SAVE_DIR)
-    for d in dirs:
-        print(d)
 
 
 DATA_FNAME = "bust-data"
