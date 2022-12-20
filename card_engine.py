@@ -76,17 +76,6 @@ class Deck:
                     self.deck.append(Card(SUITS[i], RANKS[j]))
 
         self.shuffle()
-
-    """
-    Remove cards by rank from the deck
-    input dict format =  {
-        {rank: freq}, 
-        {rank: freq},
-           .
-           .
-           .
-    }
-    """
     
     # Shuffle the deck
     def shuffle(self):
@@ -103,11 +92,6 @@ class Deck:
             print_neutral(self.deck)
         elif choice == 'd':
             print_face_down(self.deck)
-
-        #print("------------------")
-        #for i in range(len(self.deck)):
-        #    print(self.deck[i].get_rank(), "of", self.deck[i].get_suit())
-        #print("------------------")
     
     # Returns the no. of cards in the deck
     def get_len_deck(self):
@@ -170,11 +154,6 @@ class Hand:
                 print_neutral(card_specified(self.hand, num)) 
             else:
                 print_neutral(self.hand)
-
-       # print("------------------")
-       # for i in range(len(self.hand)):
-       #     print(self.hand[i].get_rank(), "of", self.hand[i].get_suit())
-       # print("------------------")
 
     # Returns the no. of cards on hand
     def get_len_hand(self):

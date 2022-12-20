@@ -9,21 +9,15 @@ import sys
 
 SAVE_DIR = 'data'
 
-"""
-To prevent any confusion, this is NOT the optimal strategy for our modified deck. This is simply just running the
-same strategy used on a standard deck, against a deck with no face cards.
-This script will run the same exact strategy used in optimal_strat.py against a modified deck
-of cards containing no face cards in the deck. 
-"""
 # strategy dict involving player hands with no aces
 # key = known_dealer_score, value = player hit range (start, end) inclusive
 hard_hands = {
         1: (4,17), # Dealer has ace
-        2: (4,12),
-        3: (4,12),
-        4: (4,11),
-        5: (4,11),
-        6: (4,11),
+        2: (4,16),
+        3: (4,16),
+        4: (4,16),
+        5: (4,16),
+        6: (4,16),
         7: (4,16),
         8: (4,16),
         9: (4,16),
